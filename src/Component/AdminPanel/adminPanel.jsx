@@ -6,18 +6,17 @@ import { BsPlusLg } from "react-icons/bs";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetailsAction } from "../../Redux/Action/adminAction";
-import MultiSelect from "react-multiple-select-dropdown-lite";
-import "react-multiple-select-dropdown-lite/dist/index.css";
+import Select from "react-select";
 
 const AdminPanel = () => {
   const dispatch = useDispatch();
   const [searchText, setSearchText] = useState("");
-  const [value, setvalue] = useState([]);
+  // const [value, setvalue] = useState();
 
-  const handleOnchange = (val) => {
-    console.log(99999, val);
-    setvalue(val);
-  };
+  // const handleOnchange = (val) => {
+  //   console.log(99999, val);
+  //   setvalue(val);
+  // };
 
   const options = [
     { label: "G1", value: "G1" },
@@ -32,13 +31,23 @@ const AdminPanel = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     control,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
     console.log("userPanel", data);
-    dispatch(getUserDetailsAction(data));
+    var record=data
+    var item=record.Groupcode
+    console.log("item",item)
+    var user=item.toString()
+    console.log("user",user)
+    setValue("Groupcode",user)
+   
+    
+ 
+    // dispatch(getUserDetailsAction(data));
   };
   const search = (e) => {
     const searchText = e.target.value;
@@ -57,7 +66,7 @@ const AdminPanel = () => {
       setList(getNewUser);
     }
   }, [getNewUser]);
-
+  
   return (
     <>
       {/* <Row>
@@ -178,12 +187,33 @@ const AdminPanel = () => {
                       <Col md={4}>
                         <Form.Group className="mb-4">
                           <Form.Label>Group Code</Form.Label>
-                          {/* <Form.Control type="text" {...register("groupId")} placeholder="ex: Group Code" /> */}
+                          
+                          <Controller
+                          
+                          control={control}
+                          defaultValue={''}
+                          name="Groupcode"
+                          render={({field:{onChange,value,ref}})=>(
+                            <Select 
+                            inputRef={ref}
+                            value={options.filter((c)=>value.includes(c.value.toString()))}
+                            onChange={(val)=>onChange(val.map((c)=>c.value
+                            
+                              ))}                             
+                            
 
+
+                            options={options}
+                            isMulti
+                            />
+                          )}
+                            />
+                          {/* <Form.Control type="text" {...register("groupId")} placeholder="ex: Group Code" /> */}
+{/* 
                           <MultiSelect
                             {...register("groupId")}
                             options={options}
-                          />
+                          /> */}
                           {/* <Form.Select aria-label="Default select example">
                                                 <option>Select Entity Id</option>
                                                 <option value="1">value 1</option>
